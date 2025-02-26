@@ -38,8 +38,7 @@ RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1
     ln -sf /usr/bin/python3.10 /usr/bin/python && \
     ln -sf /usr/bin/pip3 /usr/bin/pip
 
-# Upgrade pip
-RUN python3 -m pip install --upgrade pip
+
 
 # Copy all files to the container
 COPY . /app/Hunyuan3D-2
