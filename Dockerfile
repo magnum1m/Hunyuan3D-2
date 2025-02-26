@@ -1,6 +1,9 @@
 # Use an official Python image with CUDA support if needed
 FROM nvidia/cuda:11.8.0-devel-ubuntu20.04
 
+# Set environment variable for non-interactive installations
+ENV DEBIAN_FRONTEND=noninteractive
+
 # Set the working directory
 WORKDIR /app/Hunyuan3D-2
 
@@ -16,9 +19,14 @@ RUN apt-get update && \
         wget \
         curl \
         git \
+        tzdata \
         python3.10 \
         python3-pip && \
     rm -rf /var/lib/apt/lists/*
+
+# Configure timezone to avoid interactive prompt
+RUN ln -fs /usr/share/zoneinfo/Etc/UTC /etc/localtime && \
+    dpkg-reconfigure --frontend noninteractive tzdata
 
 # Manually install python3.10-distutils and python3.10-dev
 RUN add-apt-repository ppa:deadsnakes/ppa && \
