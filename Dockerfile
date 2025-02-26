@@ -1,4 +1,4 @@
-# Use an official Python image with CUDA support if needed
+# Use an official Python image with CUDA support if neededa
 FROM nvidia/cuda:11.8.0-devel-ubuntu20.04
 
 # Set environment variable for non-interactive installations
