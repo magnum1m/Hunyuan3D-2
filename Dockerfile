@@ -1,4 +1,4 @@
-# Use an official Python image with CUDA support if neededa
+# Use an official Python image with CUDA support if needed
 FROM nvidia/cuda:11.8.0-devel-ubuntu20.04
 
 # Set environment variable for non-interactive installations
@@ -38,13 +38,14 @@ RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1
     ln -sf /usr/bin/python3.10 /usr/bin/python && \
     ln -sf /usr/bin/pip3 /usr/bin/pip
 
-
+# Force a fresh, modern pip from PyPI (bypass system pip)
+RUN curl -sS https://bootstrap.pypa.io/get-pip.py | python3.10
 
 # Copy all files to the container
 COPY . /app/Hunyuan3D-2
 
-# Install required Python packages
-RUN pip install -r requirements.txt
+# Install required Python packages with the freshly installed pip
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Build and install the custom rasterizer
 WORKDIR /app/Hunyuan3D-2/hy3dgen/texgen/custom_rasterizer
