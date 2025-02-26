@@ -41,6 +41,8 @@ RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1
 # Force a fresh, modern pip from PyPI (bypass system pip)
 RUN curl -sS https://bootstrap.pypa.io/get-pip.py | python3.10
 
+RUN pip install --upgrade --pre torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/nightly/cu118
+
 # Copy all files to the container
 COPY . /app/Hunyuan3D-2
 
