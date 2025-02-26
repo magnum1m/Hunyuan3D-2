@@ -62,6 +62,9 @@ RUN pip install --upgrade --pre torch torchvision torchaudio --extra-index-url h
 # 9) Copy your code
 COPY . /app/Hunyuan3D-2
 
+ENV TORCH_CUDA_ARCH_LIST="6.0;6.1;7.0;7.5;8.0;8.6"
+
+
 # 10) Install other Python dependencies
 RUN pip install --no-cache-dir -r /app/Hunyuan3D-2/requirements.txt
 
