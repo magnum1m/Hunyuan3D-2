@@ -60,6 +60,9 @@ RUN ls -l /root/.cache/hy3dgen/tencent/Hunyuan3D-2/hunyuan3d-dit-v2-0
 # 8) (Optional) Install PyTorch (Nightly, CUDA 11.8)
 RUN pip install --upgrade --pre torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/nightly/cu118
 
+# Install SentencePiece for T5Tokenizer
+RUN pip install sentencepiece
+
 # 9) Copy your code
 COPY . /app/Hunyuan3D-2
 
