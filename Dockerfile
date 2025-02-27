@@ -49,7 +49,7 @@ RUN python -c "\
 from huggingface_hub import snapshot_download; \
 snapshot_download(\
     repo_id='tencent/Hunyuan3D-2', \
-    local_dir='/root/.cache/hy3dgen/tencent/Hunyuan3D-2/\
+    local_dir='/root/.cache/hy3dgen/tencent/Hunyuan3D-2', \
     revision='main', \
     allow_patterns=['hunyuan3d-dit-v2-0/*'] \
 )"
