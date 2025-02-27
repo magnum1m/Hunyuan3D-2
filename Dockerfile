@@ -97,4 +97,6 @@ EXPOSE 8080
 
 # 14) Default command to run your server
 WORKDIR /app/Hunyuan3D-2
-#CMD ["python3", "api_server.py", "--host", "0.0.0.0", "--port", "8080"]
+ENTRYPOINT ["python3", "api_server.py"]
+CMD ["--host", "0.0.0.0", "--port", "8080"]
+
