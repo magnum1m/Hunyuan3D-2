@@ -40,7 +40,7 @@ RUN curl -sS https://bootstrap.pypa.io/get-pip.py | python3.10
 RUN pip install huggingface_hub
 
 # 7) Create the local directory for the model subfolder
-RUN mkdir -p /root/.cache/hy3dgen/tencent/Hunyuan3D-2/hunyuan3d-dit-v2-0
+RUN mkdir -p /root/.cache/hy3dgen/tencent/Hunyuan3D-2/
 
 ###############################################################################
 #     *** Download only the hunyuan3d-dit-v2-0 subfolder using allow_patterns ***
@@ -49,12 +49,13 @@ RUN python -c "\
 from huggingface_hub import snapshot_download; \
 snapshot_download(\
     repo_id='tencent/Hunyuan3D-2', \
-    local_dir='/root/.cache/hy3dgen/tencent/Hunyuan3D-2/hunyuan3d-dit-v2-0', \
+    local_dir='/root/.cache/hy3dgen/tencent/Hunyuan3D-2/\
     revision='main', \
     allow_patterns=['hunyuan3d-dit-v2-0/*'] \
 )"
 
 # Now your Docker image has only that specific folder from HF
+RUN ls -l /root/.cache/hy3dgen/tencent/Hunyuan3D-2/hunyuan3d-dit-v2-0
 
 # 8) (Optional) Install PyTorch (Nightly, CUDA 11.8)
 RUN pip install --upgrade --pre torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/nightly/cu118
