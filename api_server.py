@@ -201,6 +201,46 @@ class ModelWorker:
 app = FastAPI()
 
 
+
+from fastapi import FastAPI, Request
+
+import runpod
+
+
+def handler(job):
+    """
+    Expected job structure:
+    {
+      "input": {
+         "api": {
+            "method": "GET",
+            "endpoint": "/test"
+         },
+         "payload": {}  # Additional query params or body if needed.
+      }
+    }
+    """
+    job_input = job.get("input", {})
+    api_info = job_input.get("api", {})
+    method = api_info.get("method", "GET").upper()
+    endpoint = api_info.get("endpoint", "/")
+    payload = job_input.get("payload", {})
+
+    # Dispatch based on the method.
+    if method == "GET":
+        response = client.get(endpoint, params=payload)
+    elif method == "POST":
+        response = client.post(endpoint, json=payload)
+    else:
+        return {"error": f"Method {method} not supported"}
+    
+    return {"output": response.json()}
+
+if __name__ == "__main__":
+    # Start the RunPod serverless worker.
+    runpod.serverless.start({"handler": handler})
+
+
 @app.post("/generate")
 async def generate(request: Request):
     logger.info("Worker generating...")
