@@ -39,6 +39,7 @@ RUN curl -sS https://bootstrap.pypa.io/get-pip.py | python3.10
 # 6) Install huggingface_hub so we can do partial repo downloads
 RUN pip install huggingface_hub
 
+RUN pip install runpod
 # 7) Create the local directory for the model subfolder
 RUN mkdir -p /root/.cache/hy3dgen/tencent/Hunyuan3D-2/
 
