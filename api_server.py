@@ -207,6 +207,9 @@ from fastapi import FastAPI, Request
 import runpod
 
 
+import os
+import requests
+
 def handler(job):
     """
     Expected job structure:
@@ -226,19 +229,28 @@ def handler(job):
     endpoint = api_info.get("endpoint", "/")
     payload = job_input.get("payload", {})
 
-    # Dispatch based on the method.
+    # For serverless, use the full public endpoint URL.
+    # This URL should come from your serverless configuration.
+    base_url = os.getenv("BASE_URL", "https://api.runpod.ai/v2/YOUR_ENDPOINT_ID/run")
+    # Append the endpoint to the base URL (if needed)
+    full_url = base_url.rstrip("/") + endpoint
+
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {os.getenv('API_KEY', 'your_api_key_here')}"
+    }
+
     if method == "GET":
-        response = client.get(endpoint, params=payload)
+        response = requests.get(full_url, params=payload, headers=headers)
     elif method == "POST":
-        response = client.post(endpoint, json=payload)
+        response = requests.post(full_url, json=payload, headers=headers)
     else:
         return {"error": f"Method {method} not supported"}
     
-    return {"output": response.json()}
-
-if __name__ == "__main__":
-    # Start the RunPod serverless worker.
-    runpod.serverless.start({"handler": handler})
+    try:
+        return {"output": response.json()}
+    except Exception:
+        return {"output": response.text}
 
 
 @app.post("/generate")
@@ -310,4 +322,5 @@ if __name__ == "__main__":
     model_semaphore = asyncio.Semaphore(args.limit_model_concurrency)
 
     worker = ModelWorker(model_path=args.model_path, device=args.device)
-    uvicorn.run(app, host=args.host, port=args.port, log_level="info")
+    #uvicorn.run(app, host=args.host, port=args.port, log_level="info")
+    runpod.serverless.start({"handler": handler})
