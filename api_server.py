@@ -231,7 +231,7 @@ def handler(job):
 
     # For serverless, use the full public endpoint URL.
     # This URL should come from your serverless configuration.
-    base_url = os.getenv("BASE_URL", "https://api.runpod.ai/v2/YOUR_ENDPOINT_ID/run")
+    base_url = os.getenv("BASE_URL", "https://api.runpod.ai/v2/ecnvgqfo4td2p5/run")
     # Append the endpoint to the base URL (if needed)
     full_url = base_url.rstrip("/") + endpoint
 
