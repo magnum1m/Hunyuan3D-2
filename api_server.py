@@ -184,7 +184,11 @@ async def generate(request: Request):
     uid = uuid.uuid4()
     try:
         file_path, uid = worker.generate(uid, params)
-        return FileResponse(file_path)
+        # Open the generated file, encode it as Base64, and then return it in JSON.
+        with open(file_path, "rb") as f:
+            encoded_data = base64.b64encode(f.read()).decode("ascii")
+        # You can return additional fields if needed.
+        return JSONResponse({"status": "completed", "model_base64": encoded_data}, status_code=200)
     except ValueError as e:
         traceback.print_exc()
         print("Caught ValueError:", e)
@@ -208,6 +212,7 @@ async def generate(request: Request):
             "error_code": 1,
         }
         return JSONResponse(ret, status_code=404)
+
 
 @app.post("/send")
 async def generate(request: Request):
