@@ -176,6 +176,64 @@ app = FastAPI()
 async def test_endpoint():
     return {"message": "test"}
 
+
+@app.post("/generate")
+async def generate(request: Request):
+    logger.info("Worker generating...")
+    params = await request.json()
+    uid = uuid.uuid4()
+    try:
+        file_path, uid = worker.generate(uid, params)
+        return FileResponse(file_path)
+    except ValueError as e:
+        traceback.print_exc()
+        print("Caught ValueError:", e)
+        ret = {
+            "text": server_error_msg,
+            "error_code": 1,
+        }
+        return JSONResponse(ret, status_code=404)
+    except torch.cuda.CudaError as e:
+        print("Caught torch.cuda.CudaError:", e)
+        ret = {
+            "text": server_error_msg,
+            "error_code": 1,
+        }
+        return JSONResponse(ret, status_code=404)
+    except Exception as e:
+        print("Caught Unknown Error", e)
+        traceback.print_exc()
+        ret = {
+            "text": server_error_msg,
+            "error_code": 1,
+        }
+        return JSONResponse(ret, status_code=404)
+
+@app.post("/send")
+async def generate(request: Request):
+    logger.info("Worker send...")
+    params = await request.json()
+    uid = uuid.uuid4()
+    threading.Thread(target=worker.generate, args=(uid, params,)).start()
+    ret = {"uid": str(uid)}
+    return JSONResponse(ret, status_code=200)
+
+
+@app.get("/status/{uid}")
+async def status(uid: str):
+    save_file_path = os.path.join(SAVE_DIR, f'{uid}.glb')
+    print(save_file_path, os.path.exists(save_file_path))
+    if not os.path.exists(save_file_path):
+        response = {'status': 'processing'}
+        return JSONResponse(response, status_code=200)
+    else:
+        base64_str = base64.b64encode(open(save_file_path, 'rb').read()).decode()
+        response = {'status': 'completed', 'model_base64': base64_str}
+        return JSONResponse(response, status_code=200)
+
+
+
+
 # Create a TestClient for the FastAPI app.
 from fastapi.testclient import TestClient
 client = TestClient(app)
