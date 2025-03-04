@@ -33,6 +33,10 @@ RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1
     ln -sf /usr/bin/python3.10 /usr/bin/python && \
     ln -sf /usr/bin/pip3 /usr/bin/pip
 
+RUN git clone https://github.com/NVIDIA/apex.git && \
+    cd apex && \
+    pip install -v --disable-pip-version-check --global-option="--cpp_ext" --global-option="--cuda_ext" .
+
 # 5) Upgrade pip from PyPI (bypass system pip)
 RUN curl -sS https://bootstrap.pypa.io/get-pip.py | python3.10
 
@@ -81,9 +85,8 @@ ENV TRANSFORMERS_CACHE="/root/.cache/huggingface/transformers"
 ENV HF_HOME="/root/.cache/huggingface"
 ENV OMP_NUM_THREADS=1
 
-# 17) Enable FP16 precision for inference
-RUN pip install --no-cache-dir nvidia-apex
-RUN python3 -c "from apex import amp"  # Ensure Apex is installed
+
+
 
 # 18) Expose port 8080 (if your API runs on 8080)
 EXPOSE 8080
