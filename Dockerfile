@@ -73,15 +73,7 @@ RUN python3 setup.py install
 WORKDIR /app/Hunyuan3D-2/hy3dgen/texgen/differentiable_renderer
 RUN python3 setup.py install
 
-# 15) Pre-compile CUDA kernels by running a dummy inference
-RUN python3 -c "import torch; from hy3dgen.shapegen import Hunyuan3DDiTFlowMatchingPipeline; \
-model = Hunyuan3DDiTFlowMatchingPipeline.from_pretrained('tencent/Hunyuan3D-2').cuda(); \
-dummy_input = torch.randn(1, 3, 512, 512).cuda(); \
-def run_inference(): \
-    with torch.no_grad(): \
-        model(dummy_input); \
-    torch.cuda.synchronize(); \
-run_inference()"
+
 
 # 16) Environment variables for cach
 
