@@ -73,8 +73,8 @@ RUN python3 setup.py install
 WORKDIR /app/Hunyuan3D-2/hy3dgen/texgen/differentiable_renderer
 RUN python3 setup.py install
 
-COPY dummy_run.py /app/
-RUN python3 /app/dummy_run.py
+COPY dummy_run.py /app/Hunyuan3D-2/
+RUN python3 /app/Hunyuan3D-2/dummy_run.py
 
 # 16) Environment variables for cach
 
