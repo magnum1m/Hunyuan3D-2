@@ -64,6 +64,7 @@ COPY . /app/Hunyuan3D-2
 # 12) Install other Python dependencies
 RUN pip install --no-cache-dir -r /app/Hunyuan3D-2/requirements.txt
 
+ENV TORCH_CUDA_ARCH_LIST="6.0;6.1;7.0;7.5;8.0;8.6"
 # 13) Build your custom rasterizer
 WORKDIR /app/Hunyuan3D-2/hy3dgen/texgen/custom_rasterizer
 RUN python3 setup.py install
@@ -82,7 +83,7 @@ with torch.no_grad(): model(dummy_input); \
 torch.cuda.synchronize()"
 
 # 16) Environment variables for cache
-ENV TORCH_CUDA_ARCH_LIST="6.0;6.1;7.0;7.5;8.0;8.6"
+
 ENV TRANSFORMERS_CACHE="/root/.cache/huggingface/transformers"
 ENV HF_HOME="/root/.cache/huggingface"
 ENV OMP_NUM_THREADS=1
